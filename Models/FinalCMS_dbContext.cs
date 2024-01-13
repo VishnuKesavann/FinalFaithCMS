@@ -35,14 +35,14 @@ namespace FinalCMS.Models
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<UserLogin> UserLogin { get; set; }
 
-        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
                 optionsBuilder.UseSqlServer("Data Source = VISHNU\\SQLEXPRESS; Initial Catalog = FinalCMS_db; Integrated security = True");
             }
-        }*/
+        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -367,7 +367,9 @@ namespace FinalCMS.Models
 
             modelBuilder.Entity<MedicinePrescriptions>(entity =>
             {
-                entity.HasNoKey();
+                entity.HasKey(e => e.MedPrescriptionId);
+
+                entity.Property(e => e.MedPrescriptionId).HasColumnName("medPrescriptionId");
 
                 entity.Property(e => e.AppointmentId).HasColumnName("appointmentId");
 
@@ -377,10 +379,6 @@ namespace FinalCMS.Models
                     .IsUnicode(false);
 
                 entity.Property(e => e.DosageDays).HasColumnName("dosageDays");
-
-                entity.Property(e => e.MedPrescriptionId)
-                    .HasColumnName("medPrescriptionId")
-                    .ValueGeneratedOnAdd();
 
                 entity.Property(e => e.MedicineQuantity).HasColumnName("medicineQuantity");
 
