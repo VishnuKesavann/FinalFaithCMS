@@ -12,6 +12,7 @@ namespace FinalCMS.Models
         public int? MedicineQuantity { get; set; }
         public int? AppointmentId { get; set; }
 
+        public virtual Appointment Appointment { get; set; }
         public virtual Medicine PrescribedMedicine { get; set; }
     }
 }

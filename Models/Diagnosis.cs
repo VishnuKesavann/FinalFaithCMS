@@ -16,6 +16,7 @@ namespace FinalCMS.Models
         public string Note { get; set; }
         public int? AppointmentId { get; set; }
 
+        public virtual Appointment Appointment { get; set; }
         public virtual ICollection<PatientHistory> PatientHistory { get; set; }
     }
 }
