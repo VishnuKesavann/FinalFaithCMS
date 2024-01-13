@@ -1,3 +1,4 @@
+using FinalCMS.AdminRepository;
 using FinalCMS.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,11 @@ namespace FinalCMS
 
             //connectionString for database , inject as dependency
             services.AddDbContext<FinalCMS_dbContext>(db => db.UseSqlServer(Configuration.GetConnectionString("connectionstring")));
+            //add dependency injection of  Medicinerepository
+            services.AddScoped<IMedicineRepository, MedicineRepository>();
+            //add dependency injection for Laboratoryrepository
+            services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
+
 
             //json resolved
             services.AddControllers().AddNewtonsoftJson(Options =>
