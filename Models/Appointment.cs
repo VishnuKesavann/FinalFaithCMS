@@ -8,8 +8,11 @@ namespace FinalCMS.Models
         public Appointment()
         {
             ConsultBill = new HashSet<ConsultBill>();
+            Diagnosis = new HashSet<Diagnosis>();
             LabBillGeneration = new HashSet<LabBillGeneration>();
+            LabPrescriptions = new HashSet<LabPrescriptions>();
             LabReportGeneration = new HashSet<LabReportGeneration>();
+            MedicinePrescriptions = new HashSet<MedicinePrescriptions>();
         }
 
         public int AppointmentId { get; set; }
@@ -22,7 +25,10 @@ namespace FinalCMS.Models
         public virtual Doctor Doctor { get; set; }
         public virtual Patient Patient { get; set; }
         public virtual ICollection<ConsultBill> ConsultBill { get; set; }
+        public virtual ICollection<Diagnosis> Diagnosis { get; set; }
         public virtual ICollection<LabBillGeneration> LabBillGeneration { get; set; }
+        public virtual ICollection<LabPrescriptions> LabPrescriptions { get; set; }
         public virtual ICollection<LabReportGeneration> LabReportGeneration { get; set; }
+        public virtual ICollection<MedicinePrescriptions> MedicinePrescriptions { get; set; }
     }
 }

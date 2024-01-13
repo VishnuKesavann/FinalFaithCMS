@@ -16,6 +16,7 @@ namespace FinalCMS.Models
         public string LabTestStatus { get; set; }
         public int? AppointmentId { get; set; }
 
+        public virtual Appointment Appointment { get; set; }
         public virtual Laboratory LabTest { get; set; }
         public virtual ICollection<LabReportGeneration> LabReportGeneration { get; set; }
     }
