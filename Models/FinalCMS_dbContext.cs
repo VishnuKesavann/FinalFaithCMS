@@ -35,7 +35,7 @@ namespace FinalCMS.Models
         public virtual DbSet<Staff> Staff { get; set; }
         public virtual DbSet<UserLogin> UserLogin { get; set; }
 
-       /* protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        /*protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
@@ -83,7 +83,7 @@ namespace FinalCMS.Models
             modelBuilder.Entity<ConsultBill>(entity =>
             {
                 entity.HasKey(e => e.BillId)
-                    .HasName("PK__Consult___D733892B6509BDFB");
+                    .HasName("PK__Consult___D733892B1068F748");
 
                 entity.ToTable("Consult_Bill");
 
@@ -137,6 +137,11 @@ namespace FinalCMS.Models
                     .HasColumnName("symptoms")
                     .HasMaxLength(100)
                     .IsUnicode(false);
+
+                entity.HasOne(d => d.Appointment)
+                    .WithMany(p => p.Diagnosis)
+                    .HasForeignKey(d => d.AppointmentId)
+                    .HasConstraintName("FK__Diagnosis__appoi__4E88ABD4");
             });
 
             modelBuilder.Entity<Doctor>(entity =>
@@ -163,7 +168,7 @@ namespace FinalCMS.Models
             modelBuilder.Entity<LabBillGeneration>(entity =>
             {
                 entity.HasKey(e => e.LabbillId)
-                    .HasName("PK__LabBillG__E68C5DAD44DB9D79");
+                    .HasName("PK__LabBillG__E68C5DADE0031676");
 
                 entity.Property(e => e.LabbillId).HasColumnName("labbill_Id");
 
@@ -188,28 +193,28 @@ namespace FinalCMS.Models
                 entity.HasOne(d => d.Appointment)
                     .WithMany(p => p.LabBillGeneration)
                     .HasForeignKey(d => d.AppointmentId)
-                    .HasConstraintName("FK__LabBillGe__appoi__5535A963");
+                    .HasConstraintName("FK__LabBillGe__appoi__5812160E");
 
                 entity.HasOne(d => d.Labreport)
                     .WithMany(p => p.LabBillGeneration)
                     .HasForeignKey(d => d.LabreportId)
-                    .HasConstraintName("FK__LabBillGe__labre__5629CD9C");
+                    .HasConstraintName("FK__LabBillGe__labre__59063A47");
 
                 entity.HasOne(d => d.Patient)
                     .WithMany(p => p.LabBillGeneration)
                     .HasForeignKey(d => d.PatientId)
-                    .HasConstraintName("FK__LabBillGe__Patie__571DF1D5");
+                    .HasConstraintName("FK__LabBillGe__Patie__59FA5E80");
 
                 entity.HasOne(d => d.Test)
                     .WithMany(p => p.LabBillGeneration)
                     .HasForeignKey(d => d.TestId)
-                    .HasConstraintName("FK__LabBillGe__test___5812160E");
+                    .HasConstraintName("FK__LabBillGe__test___5AEE82B9");
             });
 
             modelBuilder.Entity<LabPrescriptions>(entity =>
             {
                 entity.HasKey(e => e.LabPrescriptionId)
-                    .HasName("PK__LabPresc__22C099BABDFBE2EB");
+                    .HasName("PK__LabPresc__22C099BAC3C3B3C4");
 
                 entity.Property(e => e.LabPrescriptionId).HasColumnName("labPrescriptionId");
 
@@ -228,16 +233,21 @@ namespace FinalCMS.Models
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
+                entity.HasOne(d => d.Appointment)
+                    .WithMany(p => p.LabPrescriptions)
+                    .HasForeignKey(d => d.AppointmentId)
+                    .HasConstraintName("FK__LabPrescr__appoi__4F7CD00D");
+
                 entity.HasOne(d => d.LabTest)
                     .WithMany(p => p.LabPrescriptions)
                     .HasForeignKey(d => d.LabTestId)
-                    .HasConstraintName("FK__LabPrescr__labTe__4E88ABD4");
+                    .HasConstraintName("FK__LabPrescr__labTe__5165187F");
             });
 
             modelBuilder.Entity<LabReportGeneration>(entity =>
             {
                 entity.HasKey(e => e.LabreportId)
-                    .HasName("PK__LabRepor__775EB8619444ACD8");
+                    .HasName("PK__LabRepor__775EB8617127A401");
 
                 entity.Property(e => e.LabreportId).HasColumnName("labreport_Id");
 
@@ -267,28 +277,28 @@ namespace FinalCMS.Models
                 entity.HasOne(d => d.Appointment)
                     .WithMany(p => p.LabReportGeneration)
                     .HasForeignKey(d => d.AppointmentId)
-                    .HasConstraintName("FK__LabReport__appoi__59063A47");
+                    .HasConstraintName("FK__LabReport__appoi__5BE2A6F2");
 
                 entity.HasOne(d => d.LabPresc)
                     .WithMany(p => p.LabReportGeneration)
                     .HasForeignKey(d => d.LabPrescId)
-                    .HasConstraintName("FK__LabReport__labPr__59FA5E80");
+                    .HasConstraintName("FK__LabReport__labPr__5CD6CB2B");
 
                 entity.HasOne(d => d.Staff)
                     .WithMany(p => p.LabReportGeneration)
                     .HasForeignKey(d => d.StaffId)
-                    .HasConstraintName("FK__LabReport__staff__5AEE82B9");
+                    .HasConstraintName("FK__LabReport__staff__5DCAEF64");
 
                 entity.HasOne(d => d.Test)
                     .WithMany(p => p.LabReportGeneration)
                     .HasForeignKey(d => d.TestId)
-                    .HasConstraintName("FK__LabReport__test___5BE2A6F2");
+                    .HasConstraintName("FK__LabReport__test___5EBF139D");
             });
 
             modelBuilder.Entity<Laboratory>(entity =>
             {
                 entity.HasKey(e => e.TestId)
-                    .HasName("PK__Laborato__F3FE002A1800AE45");
+                    .HasName("PK__Laborato__F3FE002A66DE3307");
 
                 entity.Property(e => e.TestId).HasColumnName("test_Id");
 
@@ -376,10 +386,15 @@ namespace FinalCMS.Models
 
                 entity.Property(e => e.PrescribedMedicineId).HasColumnName("prescribedMedicineId");
 
+                entity.HasOne(d => d.Appointment)
+                    .WithMany(p => p.MedicinePrescriptions)
+                    .HasForeignKey(d => d.AppointmentId)
+                    .HasConstraintName("FK__MedicineP__appoi__5070F446");
+
                 entity.HasOne(d => d.PrescribedMedicine)
                     .WithMany(p => p.MedicinePrescriptions)
                     .HasForeignKey(d => d.PrescribedMedicineId)
-                    .HasConstraintName("FK__MedicineP__presc__4F7CD00D");
+                    .HasConstraintName("FK__MedicineP__presc__52593CB8");
             });
 
             modelBuilder.Entity<Patient>(entity =>
@@ -450,7 +465,7 @@ namespace FinalCMS.Models
                 entity.HasOne(d => d.Diagnosis)
                     .WithMany(p => p.PatientHistory)
                     .HasForeignKey(d => d.DiagnosisId)
-                    .HasConstraintName("FK__PatientHi__diagn__5070F446");
+                    .HasConstraintName("FK__PatientHi__diagn__534D60F1");
             });
 
             modelBuilder.Entity<Qualification>(entity =>
@@ -570,7 +585,7 @@ namespace FinalCMS.Models
             modelBuilder.Entity<UserLogin>(entity =>
             {
                 entity.HasKey(e => e.LoginId)
-                    .HasName("PK__UserLogi__C2CA7DB318983CA8");
+                    .HasName("PK__UserLogi__C2CA7DB37E0E4660");
 
                 entity.Property(e => e.LoginId).HasColumnName("login_ID");
 
