@@ -1,4 +1,5 @@
 using FinalCMS.Models;
+using FinalCMS.Receptionist_Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -43,7 +44,7 @@ namespace FinalCMS
             //enable cors
             services.AddCors();
 
-
+            
             // Add Swagger
             services.AddSwaggerGen(c =>
             {
@@ -54,7 +55,8 @@ namespace FinalCMS
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-
+            //add service for patient
+            services.AddScoped<IPatientRepository, PatientRepository>();
 
 
 
