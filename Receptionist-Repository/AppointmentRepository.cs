@@ -75,7 +75,7 @@ namespace FinalCMS.Receptionist_Repository
         }
         #endregion
         #region Book Appointment and Bill Genereation
-        public async Task<Appointment_ViewModel> BookAppointment(Appointment_ViewModel viewModel) 
+        public async Task<Appointment_ViewModel> BookAppointment(Appointment_ViewModel viewModel,bool isNewPatient) 
         {   
             var existingAppointment = await _context.Appointment.Where(a => a.PatientId == viewModel.PatientId
             && a.DoctorId == viewModel.DoctorId && a.AppointmentDate == viewModel.AppointmentDate).FirstOrDefaultAsync();
@@ -110,7 +110,17 @@ namespace FinalCMS.Receptionist_Repository
 
                 viewModel.AppointmentId = newAppointment.AppointmentId;
                 viewModel.CheckUpStatus= viewModel.CheckUpStatus;
-                decimal registerFee = viewModel.RegisterFees ?? 150;
+                decimal registerFee;
+                if (isNewPatient)
+                {
+                    registerFee = viewModel.RegisterFees ?? 150;
+
+                }
+                else
+                {
+                    registerFee = viewModel.RegisterFees ?? 0;
+                }
+
                 decimal consultFees = viewModel.ConsultationFee ?? _context.Doctor.Where(d => d.DoctorId == viewModel.DoctorId).Select(d => (decimal?)d.ConsultationFee).FirstOrDefault() ?? 0;
                 decimal totalAmount = registerFee + consultFees + (0.18m * registerFee) + (0.18m * consultFees);
 

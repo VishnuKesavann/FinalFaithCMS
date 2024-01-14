@@ -61,11 +61,11 @@ namespace FinalCMS.Controllers
         #endregion
         #region Book Appointment And Generate Bill
         [HttpPost("BookAppointment")]
-        public async Task<IActionResult> BookAppointment([FromBody] Appointment_ViewModel appointment_ViewModel)
+        public async Task<IActionResult> BookAppointment([FromBody] Appointment_ViewModel appointment_ViewModel,bool isNewPatient)
         {
             try
             {
-                var bookNewAppointment = await _appointmentRepository.BookAppointment(appointment_ViewModel);
+                var bookNewAppointment = await _appointmentRepository.BookAppointment(appointment_ViewModel,isNewPatient);
                 return Ok(bookNewAppointment);
             }
             catch(InvalidOperationException ex)
