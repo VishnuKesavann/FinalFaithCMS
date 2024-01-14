@@ -47,5 +47,16 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Get Patient By Id
+        public async Task<Patient> GetPatientById(int? id)
+        {
+            if (_context!=null)
+            {
+                var patient = await _context.Patient.FindAsync(id);
+                return patient;
+            }
+            return null;
+        }
+        #endregion
     }
 }

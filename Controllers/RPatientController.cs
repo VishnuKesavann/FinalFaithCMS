@@ -73,6 +73,30 @@ namespace FinalCMS.Controllers
             return BadRequest();
         }
         #endregion
+        #region Get Patient By Id
+        [HttpGet("{id}")]
+        public async Task<ActionResult<Patient>> GetPatientById(int? id) 
+        {
+            try
+            {
+                var patient = await _patientRepository.GetPatientById(id);
+                if (patient == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Patient: {ex.Message}");
+            }
+            #endregion
+
+        }
+
     }
 
 }
