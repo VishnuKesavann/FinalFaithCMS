@@ -39,6 +39,8 @@ namespace FinalCMS
             services.AddScoped<IMedicineRepository, MedicineRepository>();
             //add dependency injection for Laboratoryrepository
             services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
+            //add dependency injection for staffrepository
+            services.AddScoped<IStaffRepository, StaffRepository>();
 
 
             //json resolved
