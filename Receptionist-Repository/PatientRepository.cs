@@ -58,5 +58,17 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Disable Patient Status
+        public async Task<Patient> DisableStatus(int? paitientId)
+        {
+            var patient = await _context.Patient.FindAsync(paitientId);
+            if (patient != null)
+            {
+                patient.PatientStatus = "DISABLED";
+                await _context.SaveChangesAsync();
+            }
+            return patient;
+        }
+        #endregion
     }
 }

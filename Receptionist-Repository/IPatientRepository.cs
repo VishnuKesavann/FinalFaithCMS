@@ -10,5 +10,6 @@ namespace FinalCMS.Receptionist_Repository
         Task<int> AddPatient(Patient patient);
         Task<Patient> UpdatePatient(Patient patient);
         Task<Patient> GetPatientById(int? id);
+        Task<Patient> DisableStatus(int? paitientId);
     }
 }

@@ -93,9 +93,33 @@ namespace FinalCMS.Controllers
             {
                 return BadRequest($"Patient: {ex.Message}");
             }
-            #endregion
 
         }
+        #endregion
+        #region Disable PatientRecords
+        [HttpPatch("{patientId}")]
+        public async Task<IActionResult> Disable(int patientId)
+        {
+            try
+            {
+                var patient = await _patientRepository.DisableStatus(patientId);
+                if (patient == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest($"Disable: {ex.Message}");
+            }
+            
+        }
+        #endregion
 
     }
 
