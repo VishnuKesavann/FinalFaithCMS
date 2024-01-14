@@ -55,8 +55,10 @@ namespace FinalCMS
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
             });
-            //add service for patient
+            //add service for patient repository
             services.AddScoped<IPatientRepository, PatientRepository>();
+            //add service for appointment repository
+            services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
 
 
