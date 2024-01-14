@@ -34,5 +34,18 @@ namespace FinalCMS.Receptionist_Repository
             return 0;
         }
         #endregion
+        #region Update a Patient
+        public async Task<Patient> UpdatePatient(Patient patient)
+        {
+            if (_context!=null)
+            {
+                _context.Entry(patient).State = EntityState.Modified;
+                _context.Patient.Update(patient);
+                await _context.SaveChangesAsync();
+                return patient;
+            }
+            return null;
+        }
+        #endregion
     }
 }

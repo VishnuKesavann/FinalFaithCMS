@@ -54,5 +54,25 @@ namespace FinalCMS.Controllers
             return BadRequest();//if the above does not  work 
         }
         #endregion
+        #region Update a Patient
+        [HttpPut]
+        public async Task<IActionResult> UpdatePatient([FromBody] Patient patient)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    await _patientRepository.UpdatePatient(patient);
+                    return Ok(patient);
+                }
+                catch (Exception ex)
+                {
+                    return BadRequest(ex.Message);
+                }
+            }
+            return BadRequest();
+        }
+        #endregion
     }
+
 }

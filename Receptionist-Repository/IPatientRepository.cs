@@ -8,5 +8,6 @@ namespace FinalCMS.Receptionist_Repository
     {
         Task<List<Patient>> GetAllPatient();
         Task<int> AddPatient(Patient patient);
+        Task<Patient> UpdatePatient(Patient patient);
     }
 }
