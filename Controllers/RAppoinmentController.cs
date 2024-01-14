@@ -79,5 +79,25 @@ namespace FinalCMS.Controllers
             
         }
         #endregion
+        #region Display  the Bill Details
+        [HttpGet("GetBillDetails/{billId}")]
+        public async Task<IActionResult> BillGeneration(int? billId) 
+        {
+            try
+            {
+                var billgenerated= await _appointmentRepository.BillDetails(billId);
+                if (billgenerated!=null)
+                {
+                    return Ok(billgenerated);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                
+            }
+        }
+        #endregion
     }
 }

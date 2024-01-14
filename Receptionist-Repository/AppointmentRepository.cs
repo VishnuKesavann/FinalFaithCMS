@@ -143,5 +143,91 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Display Bill Details
+        public async Task<BillViewModel> BillDetails(int? billId)
+        {
+            if (_context == null)
+                return null;
+
+            var bill = await _context.ConsultBill.FindAsync(billId);
+            if (bill == null)
+                return null;
+
+            var appointment = await GetAppointmentDetails(bill.AppointmentId);
+            if (appointment == null)
+                return null;
+
+            var patient = await GetPatientDetails(appointment.PatientId);
+            var doctor = await GetDoctorDetails(appointment.DoctorId);
+            if (doctor == null)
+                return null;
+
+            var specialization = await GetSpecializationDetails(doctor.SpecializationId);
+            var department = await GetDepartmentDetails(specialization.DepartmentId);
+            var staff = await GetStaffDetails(doctor.StaffId);
+
+            if (staff == null || specialization == null || department == null)
+                return null;
+
+            return CreateBillViewModel(patient, doctor, staff, specialization, department, appointment, bill);
+        }
+
+        private async Task<Appointment> GetAppointmentDetails(int? appointmentId)
+        {
+            return await _context.Appointment.FindAsync(appointmentId);
+        }
+
+        private async Task<Patient> GetPatientDetails(int? patientId)
+        {
+            return await _context.Patient.FindAsync(patientId);
+        }
+
+        private async Task<Doctor> GetDoctorDetails(int? doctorId)
+        {
+            return await _context.Doctor.FindAsync(doctorId);
+        }
+
+        private async Task<Specialization> GetSpecializationDetails(int? specializationId)
+        {
+            return await _context.Specialization.FindAsync(specializationId);
+        }
+
+        private async Task<Department> GetDepartmentDetails(int? departmentId)
+        {
+            return await _context.Department.FindAsync(departmentId);
+        }
+
+        private async Task<Staff> GetStaffDetails(int? staffId)
+        {
+            return await _context.Staff.FindAsync(staffId);
+        }
+
+        private BillViewModel CreateBillViewModel(Patient patient, Doctor doctor, Staff staff, Specialization specialization, Department department, Appointment appointment, ConsultBill bill)
+        {
+            return new BillViewModel()
+            {
+                PatientId = patient.PatientId,
+                PatientName = patient.PatientName,
+                RegisterNo = patient.RegisterNo,
+                DoctorId = doctor.DoctorId,
+                StaffId = staff.StaffId,
+                StaffName = staff.StaffName,
+                RegisterFees = bill.RegisterFees,
+                ConsultationFee = doctor.ConsultationFee,
+                SpecializationId = specialization.SpecializationId,
+                TotalAmt = bill.TotalAmt,
+                DepartmentId = department.DepartmentId,
+                Department1 = department.Department1,
+                AppointmentId = appointment.AppointmentId,
+                TokenNo = appointment.TokenNo,
+                AppointmentDate = appointment.AppointmentDate,
+                CheckUpStatus = appointment.CheckUpStatus,
+                BillId = bill.BillId,
+            };
+        }
+
+        #endregion
+
+
     }
 }
