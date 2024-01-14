@@ -18,6 +18,7 @@ namespace FinalCMS.Controllers
         }
         #region GetAllDepartment
         [HttpGet]
+        [Route("GetAllDepartments")]
         public async Task<ActionResult<IEnumerable<Department>>> GetAllDepartment()
         {
             return await _appointmentRepository.GetAllDepartment();
