@@ -1,5 +1,6 @@
 ﻿using FinalCMS.Models;
 using FinalCMS.Receptionist_Repository;
+using FinalCMS.Receptionist_ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections;
@@ -41,6 +42,21 @@ namespace FinalCMS.Controllers
         }
 
         #endregion
-        
+        #region Get All Doctors by SpecializationId
+        [HttpGet("GetDoctorBySpecializationId/{specializationId}")]
+        public async Task<ActionResult<IEnumerable<DoctorViewModel>>> GetAllDoctorsBySpecializationId(int? specializationId) 
+        {
+            var doctor = await _appointmentRepository.GetAllDoctorBySpecializationId(specializationId);
+            if (doctor != null && doctor.Count > 0)
+            {
+                return Ok(doctor);
+            }
+            else 
+            {
+                return NotFound();
+            }
+        }
+
+        #endregion
     }
 }

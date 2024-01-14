@@ -1,4 +1,5 @@
 ﻿using FinalCMS.Models;
+using FinalCMS.Receptionist_ViewModel;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -35,6 +36,42 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Get Doctor by Specializaton Id
+        public async Task<List<DoctorViewModel>> GetAllDoctorBySpecializationId(int? specializationId)
+        {
+            if (_context != null)
+            {
+                var doctors = await _context.Doctor
+            .Where(d => d.SpecializationId == specializationId)
+            .Include(d => d.Staff)
+            .Include(d => d.Staff.Specialization)
+            .Select(d => new DoctorViewModel
+            {
+                DoctorId = d.DoctorId,
+                ConsultationFee = d.ConsultationFee,
+                StaffId = d.StaffId,
+                SpecializationId = d.SpecializationId,
+                QualificationId = d.Staff.QualificationId,
+                LoginId = d.Staff.LoginId,
+                StaffName = d.Staff.StaffName,
+                StaffDob = d.Staff.StaffDob,
+                StaffGender = d.Staff.StaffGender,
+                StaffAddress = d.Staff.StaffAddress,
+                StaffBloodgroup = d.Staff.StaffBloodgroup,
+                StaffJoindate = d.Staff.StaffJoindate,
+                StaffSalary = d.Staff.StaffSalary,
+                StaffMobieno = d.Staff.StaffMobieno,
+                DepartmentId = d.Staff.DepartmentId,
+                EMail = d.Staff.EMail,
+                RoleId = d.Staff.RoleId
+            })
+            .ToListAsync();
 
+                return doctors;
+
+            }
+            return null;
+        }
+        #endregion
     }
 }
