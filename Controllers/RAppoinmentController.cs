@@ -3,6 +3,7 @@ using FinalCMS.Receptionist_Repository;
 using FinalCMS.Receptionist_ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -57,6 +58,26 @@ namespace FinalCMS.Controllers
             }
         }
 
+        #endregion
+        #region Book Appointment And Generate Bill
+        [HttpPost("BookAppointment")]
+        public async Task<IActionResult> BookAppointment([FromBody] Appointment_ViewModel appointment_ViewModel)
+        {
+            try
+            {
+                var bookNewAppointment = await _appointmentRepository.BookAppointment(appointment_ViewModel);
+                return Ok(bookNewAppointment);
+            }
+            catch(InvalidOperationException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
+        }
         #endregion
     }
 }

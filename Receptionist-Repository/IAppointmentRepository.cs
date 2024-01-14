@@ -10,5 +10,6 @@ namespace FinalCMS.Receptionist_Repository
         Task<List<Department>> GetAllDepartment();
         Task<List<Specialization>> GetAllSpecializationByDepartmentId(int? departmentId);
         Task<List<DoctorViewModel>> GetAllDoctorBySpecializationId(int? specializationId);
+        Task<Appointment_ViewModel> BookAppointment(Appointment_ViewModel viewModel);
     }
 }
