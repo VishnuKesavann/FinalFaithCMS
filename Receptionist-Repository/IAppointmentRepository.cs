@@ -7,5 +7,6 @@ namespace FinalCMS.Receptionist_Repository
     public interface IAppointmentRepository
     {
         Task<List<Department>> GetAllDepartment();
+        Task<List<Specialization>> GetAllSpecializationByDepartmentId(int? departmentId);
     }
 }

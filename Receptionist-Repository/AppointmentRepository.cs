@@ -1,6 +1,7 @@
 ﻿using FinalCMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FinalCMS.Receptionist_Repository
@@ -19,6 +20,17 @@ namespace FinalCMS.Receptionist_Repository
             {
                 return await _context.Department.ToListAsync();
 
+            }
+            return null;
+        }
+        #endregion
+
+        #region Get all Specialization By Department Id
+        public async Task<List<Specialization>> GetAllSpecializationByDepartmentId(int? departmentId) 
+        {
+            if (_context!=null)
+            {
+                return await _context.Specialization.Where(s => s.DepartmentId == departmentId).ToListAsync();
             }
             return null;
         }

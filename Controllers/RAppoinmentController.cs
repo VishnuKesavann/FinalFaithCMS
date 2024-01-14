@@ -24,5 +24,23 @@ namespace FinalCMS.Controllers
             return await _appointmentRepository.GetAllDepartment();
         }
         #endregion
+        #region Get all specialization by departmentId
+        [HttpGet("GetSpecializationByDepartmentId/{departmentId}")]
+        public async Task<IActionResult> GetAllSpecializaitonByDepartmentId(int? departmentId)
+        {
+            var specialization = await _appointmentRepository.GetAllSpecializationByDepartmentId(departmentId);
+            if (specialization != null && specialization.Count > 0)
+            {
+                return Ok(specialization);
+            }
+            else 
+            {
+                return NotFound();
+            }
+
+        }
+
+        #endregion
+        
     }
 }
