@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using System;
 using FinalCMS.Repository;
 using FinalCMS.ViewModel;
+using FinalCMS.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace FinalCMS.Controllers
 {
@@ -39,5 +41,27 @@ namespace FinalCMS.Controllers
             }
         }
         #endregion
+
+
+        #region Search Patient Prescriptions by PatientId
+        [HttpGet("search")]
+        public async Task<ActionResult<IEnumerable<PharmacistViewModel>>> SearchPatientPrescriptionsByPatientId([FromQuery] int? patientId)
+        {
+            try
+            {
+                var patientPrescriptions = await _patientPrescriptionRepository.SearchPatientPrescriptionsByPatientId(patientId);
+                if (patientPrescriptions == null || patientPrescriptions.Count == 0)
+                {
+                    return NotFound($"No Patient Prescriptions found for PatientId '{patientId}'");
+                }
+                return Ok(patientPrescriptions);
+            }
+            catch (Exception)
+            {
+                return BadRequest("Error while searching Patient Prescriptions");
+            }
+        }
+        #endregion
+
     }
 }

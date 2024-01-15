@@ -2,6 +2,8 @@
 {
     public class PharmacistViewModel
     {
+        public int PatientId { get; set; }
+
         public string PatientName { get; set; }
         public long PhoneNumber { get; set; }
         public string PrescribedMedicine { get; set; }
