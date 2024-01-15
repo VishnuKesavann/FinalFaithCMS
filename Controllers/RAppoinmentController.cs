@@ -106,5 +106,25 @@ namespace FinalCMS.Controllers
             return await _appointmentRepository.GetAllAppointmentsWithBillViewModel(); 
         }
         #endregion
+        #region Get AppointmentDetails by appointment Id
+        [HttpGet("GetAppointment/{appointmentId}")]
+        public async Task<ActionResult<BillViewModel>> GetAppointmentDetailsByAppointmentId(int? appointmentId) 
+        {
+            try
+            {
+                var appointment= await _appointmentRepository.GetAppointmentDetailsById(appointmentId);
+                if (appointment!=null)
+                {
+                    return Ok(appointment);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"error:{ex.Message}");
+                
+            }
+        }
+        #endregion
     }
 }

@@ -13,5 +13,6 @@ namespace FinalCMS.Receptionist_Repository
         Task<Appointment_ViewModel> BookAppointment(Appointment_ViewModel viewModel, bool isNewPatient);
         Task<BillViewModel> BillDetails(int? billId);
         Task<List<BillViewModel>> GetAllAppointmentsWithBillViewModel();
+        Task<BillViewModel> GetAppointmentDetailsById(int? appointmentId);
     }
 }

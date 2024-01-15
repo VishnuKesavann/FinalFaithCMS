@@ -300,6 +300,42 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Get the appointment details by Appointment Id
+        public async Task<BillViewModel> GetAppointmentDetailsById(int? appointmentId)
+        {
+            if (_context!=null)
+            {
+                var appointments = await _context.Appointment                   
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor).ThenInclude
+                    (d => d.Staff).Include(a => a.Doctor).ThenInclude(d => d.Specialization).ThenInclude(s => s.Department).FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
+                
+                var ConsultBill=await _context.ConsultBill.FirstOrDefaultAsync(b=>b.AppointmentId == appointmentId);
+                var billViewModel = new BillViewModel
+                {
+                    AppointmentId = appointments.AppointmentId,
+                    TokenNo = appointments.TokenNo,
+                    AppointmentDate = appointments.AppointmentDate,
+                    PatientId = appointments.PatientId,
+                    DoctorId = appointments.DoctorId,
+                    CheckUpStatus = appointments.CheckUpStatus,
+                    BillId = ConsultBill.BillId,
+                    RegisterFees = ConsultBill?.RegisterFees,
+                    TotalAmt = ConsultBill.TotalAmt,
+                    ConsultationFee = appointments.Doctor?.ConsultationFee,
+                    StaffId = appointments.Doctor?.StaffId,
+                    SpecializationId = appointments.Doctor?.SpecializationId,
+                    DepartmentId = appointments.Doctor?.Specialization?.DepartmentId,
+                    Department1 = appointments.Doctor?.Specialization?.Department?.Department1,
+                    StaffName = appointments.Doctor?.Staff?.StaffName,
+                    RegisterNo = appointments.Patient?.RegisterNo,
+                    PatientName = appointments.Patient?.PatientName
+                };
+                return billViewModel;
+            }
+            return null;
+        }
+        #endregion
 
     }
 }
