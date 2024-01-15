@@ -1,3 +1,4 @@
+using FinalCMS.Doctor_Repository;
 using FinalCMS.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,6 +32,11 @@ namespace FinalCMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<IDAppointmentRepository , DAppointmentRepository>();
+            services.AddScoped<IDPatientviewRepository, DPatientviewRepository>();
+            services.AddScoped<IDPatienthistoryRepository , DPatienthistoryRepository>();
+
 
             //connectionString for database , inject as dependency
             services.AddDbContext<FinalCMS_dbContext>(db => db.UseSqlServer(Configuration.GetConnectionString("connectionstring")));
