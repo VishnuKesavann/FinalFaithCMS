@@ -99,5 +99,12 @@ namespace FinalCMS.Controllers
             }
         }
         #endregion
+        #region Get All Appointments
+        [HttpGet("GetAllAppointments")]
+        public async Task<IEnumerable<BillViewModel>> GetAllAppointments() 
+        {
+            return await _appointmentRepository.GetAllAppointmentsWithBillViewModel(); 
+        }
+        #endregion
     }
 }

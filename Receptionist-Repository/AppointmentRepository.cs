@@ -1,6 +1,9 @@
 ﻿using FinalCMS.Models;
 using FinalCMS.Receptionist_ViewModel;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -228,6 +231,75 @@ namespace FinalCMS.Receptionist_Repository
 
         #endregion
 
+        #region Get All Appointments with BillViewModel
+        public async Task<List<BillViewModel>> GetAllAppointmentsWithBillViewModel()
+        {
+            if (_context != null)
+            {
+                var appointments = await _context.Appointment
+             .Include(a => a.Patient)
+             .Include(a => a.Doctor).ThenInclude
+             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department)
+             .ToListAsync();
+                // Enable logging to console
+                var loggerFactory = LoggerFactory.Create(builder =>
+                {
+                    builder.AddFilter((category, level) =>
+                        category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
+                        .AddConsole();
+                });
+
+                _context.Database.SetCommandTimeout(180);
+                _context.GetService<ILoggerFactory>().AddProvider(new MyLoggerProvider());
+
+                // Your actual query to retrieve Staff with Department
+                var staffWithDepartment = await _context.Staff
+                    .Include(s => s.Department)
+                    .FirstOrDefaultAsync(s=>s.DepartmentId==s.Department.DepartmentId);
+
+                // Disable logging after the query (optional)
+                _context.Database.SetCommandTimeout(30); // Set the timeout to its original value
+                _context.GetService<ILoggerFactory>().Dispose();
+
+                var appointmentsWithViewModel = new List<BillViewModel>();
+
+                foreach (var appointment in appointments)
+                {
+                    // Find the ConsultBill for the current appointment
+                    var consultBill = await _context.ConsultBill
+                        .FirstOrDefaultAsync(b => b.AppointmentId == appointment.AppointmentId);
+
+                    // Transform Appointment entity and ConsultBill to BillViewModel
+                    var appointmentWithViewModel = new BillViewModel
+                    {
+                        AppointmentId = appointment.AppointmentId,
+                        TokenNo = appointment.TokenNo,
+                        AppointmentDate = appointment.AppointmentDate,
+                        PatientId = appointment.PatientId,
+                        DoctorId = appointment.DoctorId,
+                        CheckUpStatus = appointment.CheckUpStatus,
+                        BillId = consultBill.BillId,
+                        RegisterFees = consultBill?.RegisterFees,
+                        TotalAmt = consultBill.TotalAmt,
+                        ConsultationFee = appointment.Doctor?.ConsultationFee,
+                        StaffId = appointment.Doctor?.StaffId,
+                        SpecializationId = appointment.Doctor?.SpecializationId,
+                        DepartmentId = appointment.Doctor?.Specialization?.DepartmentId,
+                        Department1 = appointment.Doctor?.Specialization?.Department?.Department1,
+                        StaffName = appointment.Doctor?.Staff?.StaffName,
+                        RegisterNo = appointment.Patient?.RegisterNo,
+                        PatientName = appointment.Patient?.PatientName
+                    };
+
+                    appointmentsWithViewModel.Add(appointmentWithViewModel);
+                }
+
+
+                return appointmentsWithViewModel;
+            }
+            return null;
+        }
+        #endregion
 
     }
 }
