@@ -239,7 +239,7 @@ namespace FinalCMS.Receptionist_Repository
                 var appointments = await _context.Appointment
              .Include(a => a.Patient)
              .Include(a => a.Doctor).ThenInclude
-             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department)
+             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department).Where(a=>a.CheckUpStatus=="CONFIRMED")
              .ToListAsync();
                 // Enable logging to console
                 var loggerFactory = LoggerFactory.Create(builder =>
@@ -308,7 +308,7 @@ namespace FinalCMS.Receptionist_Repository
                 var appointments = await _context.Appointment                   
                     .Include(a => a.Patient)
                     .Include(a => a.Doctor).ThenInclude
-                    (d => d.Staff).Include(a => a.Doctor).ThenInclude(d => d.Specialization).ThenInclude(s => s.Department).FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
+                    (d => d.Staff).Include(a => a.Doctor).ThenInclude(d => d.Specialization).ThenInclude(s => s.Department).Where(a=>a.CheckUpStatus=="CONFIRMED").FirstOrDefaultAsync(a => a.AppointmentId == appointmentId);
                 
                 var ConsultBill=await _context.ConsultBill.FirstOrDefaultAsync(b=>b.AppointmentId == appointmentId);
                 var billViewModel = new BillViewModel
