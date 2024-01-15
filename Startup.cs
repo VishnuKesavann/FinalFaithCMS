@@ -38,7 +38,8 @@ namespace FinalCMS
 
             // Add repositories
             services.AddScoped<IPharmacistRepository, PharmacistRepository>();
-            //services.AddScoped<IPatientPrescriptionRepository, PatientPrescriptionRepository>();
+            services.AddScoped<IPharPatientPrescriptionRepository, PharPatientPrescriptionRepository>();
+
 
             //json resolved
             services.AddControllers().AddNewtonsoftJson(Options =>
@@ -68,6 +69,10 @@ namespace FinalCMS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Enable CORS
+            app.UseCors(options =>
+            options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
 
             app.UseCors(Options =>
