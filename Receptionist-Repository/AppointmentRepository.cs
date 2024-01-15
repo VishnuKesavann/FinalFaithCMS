@@ -336,6 +336,23 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Cancel Appointment
+        public async Task<Appointment> CancelAppointment(int? appointmentId) 
+        {
+            if (_context!=null)
+            {
+                var appointment = await _context.Appointment.FindAsync(appointmentId);
+                if (appointment != null) 
+                {
+                    appointment.CheckUpStatus = "CANCELLED";
+                    await _context.SaveChangesAsync();
+                    
+                }
+                return appointment;
+            }
+            return null;
+        }
+        #endregion
 
     }
 }

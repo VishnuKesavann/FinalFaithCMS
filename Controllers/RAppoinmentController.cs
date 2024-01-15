@@ -126,5 +126,24 @@ namespace FinalCMS.Controllers
             }
         }
         #endregion
+        #region CANCEL APPOINTMENT
+        [HttpPatch("cancelAppointment/{appointmentId}")]
+        public async Task<IActionResult> CancelAppointment(int? appointmentId) 
+        {
+            try
+            {
+                var appointment= await _appointmentRepository.CancelAppointment(appointmentId);
+                if (appointment!=null)
+                {
+                    return Ok(appointment);
+                }
+                return NotFound();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Error:{ex.Message}");
+            }
+        }
+        #endregion
     }
 }
