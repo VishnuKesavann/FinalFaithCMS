@@ -36,6 +36,9 @@ namespace FinalCMS
             services.AddScoped<IDAppointmentRepository , DAppointmentRepository>();
             services.AddScoped<IDPatientviewRepository, DPatientviewRepository>();
             services.AddScoped<IDPatienthistoryRepository , DPatienthistoryRepository>();
+            services.AddScoped<IDdiagnosisRepositor , DdiagnosisRepository>();
+
+            services.AddLogging();
 
 
             //connectionString for database , inject as dependency

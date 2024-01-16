@@ -7,7 +7,7 @@ namespace FinalCMS.Doctor_Repository
 {
     public interface IDPatienthistoryRepository
     {
-        public Task<List<Patienthis>> GetPatientHistoryAsync(int patientId);
+        Task<List<Patienthis>> GetPatientHistoryAsync(int patientId);
 
     }
 }

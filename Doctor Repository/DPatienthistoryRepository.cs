@@ -15,32 +15,42 @@ namespace FinalCMS.Doctor_Repository
         {
             _DbContext = DbContext;
         }
+
+
         public async Task<List<Patienthis>> GetPatientHistoryAsync(int patientId)
         {
-           
-                var query = from appointment in _DbContext.Appointment
-                            join diagnosis in _DbContext.Diagnosis on appointment.AppointmentId equals diagnosis.AppointmentId
-                            join labPrescription in _DbContext.LabPrescriptions on diagnosis.AppointmentId equals labPrescription.AppointmentId
-                            join labTest in _DbContext.Laboratory on labPrescription.LabTestId equals labTest.TestId
-                            join medicinePrescription in _DbContext.MedicinePrescriptions on diagnosis.AppointmentId equals medicinePrescription.AppointmentId
-                            join medicine in _DbContext.Medicine on medicinePrescription.MedPrescriptionId equals medicine.MedicineId
-                            join reportGeneration in _DbContext.LabReportGeneration on medicinePrescription.AppointmentId equals reportGeneration.AppointmentId into rg
-                            from report in rg.DefaultIfEmpty()
-                            where appointment.PatientId == patientId
-                            select new Patienthis
-                            {
-                                AppointmentDate = appointment.AppointmentDate,
-                                Symptoms = diagnosis.Symptoms,
-                                Diagnosis1 = diagnosis.Diagnosis1,
-                                Note = diagnosis.Note,
-                                MedicineName = medicine.MedicineName,
-                                TestName = labTest.TestName, // Use the TestName from TblLabTests
-                                LabResult = report != null ? report.LabResult : "N.A"
-                            };
 
-                return await query.ToListAsync();
+            if (_DbContext != null)
+            {
+                var patientHistory = await _DbContext.Appointment
+             .Include(a => a.Diagnosis)
+                 .ThenInclude(d => d.PatientHistory)
+             .Include(a => a.LabPrescriptions)
+                 .ThenInclude(lp => lp.LabTest)
+             .Include(a => a.MedicinePrescriptions)
+                 .ThenInclude(mp => mp.PrescribedMedicine)
+             .Include(a => a.LabReportGeneration)
+                 .ThenInclude(rg => rg.Test)
+             .Where(a => a.PatientId == patientId)
+             .Select(a => new Patienthis
+             {
+                 AppointmentDate = a.AppointmentDate,
+                 Symptoms = a.Diagnosis.FirstOrDefault().Symptoms,
+                 Diagnosis1 = a.Diagnosis.FirstOrDefault().Diagnosis1,
+                 Note = a.Diagnosis.FirstOrDefault().Note,
+                 MedicineName = a.MedicinePrescriptions.FirstOrDefault().PrescribedMedicine.MedicineName,
+                 TestName = a.LabPrescriptions.FirstOrDefault().LabTest.TestName,
+                 LabResult = a.LabReportGeneration.FirstOrDefault().LabResult ?? "N.A"
+             })
+             .ToListAsync();
 
-            
+                return patientHistory;
+
+
+
+            }
+            return null;
+
         }
 
     }
