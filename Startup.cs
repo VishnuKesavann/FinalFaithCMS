@@ -1,3 +1,4 @@
+using FinalCMS.Doctor_Repository;
 using FinalCMS.AdminRepository;
 using FinalCMS.Models;
 using FinalCMS.Receptionist_Repository;
@@ -33,6 +34,14 @@ namespace FinalCMS
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
+            services.AddScoped<IDAppointmentRepository , DAppointmentRepository>();
+            services.AddScoped<IDPatientviewRepository, DPatientviewRepository>();
+            services.AddScoped<IDPatienthistoryRepository , DPatienthistoryRepository>();
+            services.AddScoped<IDdiagnosisRepositor , DdiagnosisRepository>();
+
+            services.AddLogging();
+
 
             //connectionString for database , inject as dependency
             services.AddDbContext<FinalCMS_dbContext>(db => db.UseSqlServer(Configuration.GetConnectionString("connectionstring")));
