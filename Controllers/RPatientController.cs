@@ -120,6 +120,15 @@ namespace FinalCMS.Controllers
             
         }
         #endregion
+        #region Get All Disabled Patient Records
+
+        [HttpGet]
+        [Route("GetDisabledPatient")]
+        public async Task<ActionResult<IEnumerable<Patient>>> GetDisabledPatient()
+        {
+            return await _patientRepository.GetAllDisabledPatients();
+        }
+        #endregion
 
     }
 

@@ -1,6 +1,7 @@
 ﻿using FinalCMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FinalCMS.Receptionist_Repository
@@ -12,15 +13,16 @@ namespace FinalCMS.Receptionist_Repository
         {
            _context = context;
         }
-
+        #region Get All Active Patient Records
         public async Task<List<Patient>> GetAllPatient()
         {
             if (_context != null)
             {
-                return await _context.Patient.ToListAsync();
+                return await _context.Patient.Where(p=>p.PatientStatus=="ACTIVE").ToListAsync();
             }
             return null;
         }
+        #endregion
         #region Add an Patient
         //add a Patient
         public async Task<int> AddPatient(Patient patient)
@@ -68,6 +70,17 @@ namespace FinalCMS.Receptionist_Repository
                 await _context.SaveChangesAsync();
             }
             return patient;
+        }
+        #endregion
+
+        #region Get All Disabled Patient Records
+        public async Task<List<Patient>> GetAllDisabledPatients()
+        {
+            if (_context != null)
+            {
+                return await _context.Patient.Where(p => p.PatientStatus == "DISABLED").ToListAsync();
+            }
+            return null;
         }
         #endregion
     }
