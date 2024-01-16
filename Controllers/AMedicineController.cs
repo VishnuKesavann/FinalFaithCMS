@@ -57,8 +57,9 @@ namespace FinalCMS.Controllers
         #endregion
 
 
-        
+
         #region Update Medicine
+        [HttpPut]
         public async Task<IActionResult> UpdateEmployee([FromBody] Medicine med)
         {
             if (ModelState.IsValid)  // check the validate the code
