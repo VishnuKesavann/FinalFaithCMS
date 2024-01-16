@@ -41,6 +41,7 @@ namespace FinalCMS
             services.AddScoped<ILaboratoryRepository, LaboratoryRepository>();
             //add dependency injection for staffrepository
             services.AddScoped<IStaffRepository, StaffRepository>();
+            services.AddScoped<IUserLoginRepository, UserLoginRepository>();
 
 
             //json resolved
@@ -58,6 +59,7 @@ namespace FinalCMS
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Clinic Management System", Version = "v1" });
 
                 // Set the comments path for the Swagger JSON and UI.
+                
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 c.IncludeXmlComments(xmlPath);
@@ -87,7 +89,7 @@ namespace FinalCMS
 
                 // Enable Swagger UI only in the development environment
                 app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Clinic Management API Vi"));
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "Clinic Management API Vi"));
 
 
             }

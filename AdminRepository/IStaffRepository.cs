@@ -7,13 +7,10 @@ namespace FinalCMS.AdminRepository
 {
     public interface IStaffRepository
     {
-        //list the staff
-        Task<List<StaffViewModel>> GetViewModelEmployees();
-        //add new staff
-        Task<int> AddStaff(Staff staff);
+        Task<List<StaffViewModel>> GetStaffDetails();
+        Task<StaffViewModel> GetStaffDetailsById(int? staffId);
         Task UpdateStaff(Staff staff);
-
-
+        Task<int> AddStaffWithRelatedData(StaffViewModel staffDetails);
 
     }
 }

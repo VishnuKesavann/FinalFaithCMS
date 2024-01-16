@@ -12,6 +12,7 @@ namespace FinalCMS.Models
 
         public int LoginId { get; set; }
         public string UserName { get; set; }
+        //public object Username { get; internal set; }
         public string Password { get; set; }
         public int? RoleId { get; set; }
 
