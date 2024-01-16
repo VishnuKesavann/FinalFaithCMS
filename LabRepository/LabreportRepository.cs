@@ -1,8 +1,9 @@
-﻿using FinalCMS.Models;
+﻿using FinalCMS.LabViewModel;
+using FinalCMS.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using System.Linq;
 namespace FinalCMS.LabRepository
 {
     public class LabreportRepository : ILabreportRepository
@@ -15,51 +16,66 @@ namespace FinalCMS.LabRepository
             _dbContext = dbContext;
         }
 
-        #region get all LabReportGeneration
-        public async Task<List<LabReportGeneration>> GetAllLabReportGeneration()
+        public async Task<List<LabReportVM>> GetViewModelReport()
         {
             if (_dbContext != null)
             {
-                return await _dbContext.LabReportGeneration.ToListAsync();
+                var query = from lr in _dbContext.LabReportGeneration
+                            join l in _dbContext.Laboratory on lr.TestId equals l.TestId
+                            join a in _dbContext.Appointment on lr.AppointmentId equals a.AppointmentId
+                            join p in _dbContext.Patient on a.PatientId equals p.PatientId
+
+                            select new LabReportVM
+                            {
+                                ReportDate = lr.ReportDate,
+                                ReportId = lr.LabreportId,
+                                PatientName = p.PatientName,
+                                TestName = l.TestName,
+                                HighRange = l.HighRange,
+                                LowRange = l.LowRange,
+                                TestResult = lr.LabResult,
+                                Remarks = lr.Remarks
+                            };
+
+                return await query.ToListAsync();
             }
             return null;
         }
-        #endregion
-
-        #region Add a LabReportGeneration
-        public async Task<int> AddLabReport(LabReportGeneration labReport)
+        #region 
+        public async Task<int> AddReport(LabReportGeneration report)
         {
             if (_dbContext != null)
             {
-                await _dbContext.LabReportGeneration.AddAsync(labReport);
-                await _dbContext.SaveChangesAsync();  // commit the transction
-                return labReport.LabreportId;
+                await _dbContext.LabReportGeneration.AddAsync(report);
+                await _dbContext.SaveChangesAsync();
+                return report.LabreportId;
             }
             return 0;
         }
         #endregion
 
-        #region GetLabReportById
-        public async Task<LabReportGeneration> GetLabReportById(int? id)
+        #region GET
+        public async Task<GetIDVM> GetIDViewModel()
         {
             if (_dbContext != null)
             {
-                var labReport = await _dbContext.LabReportGeneration.FindAsync(id);   //primary key
-                return labReport;
+                var query = from lr in _dbContext.LabPrescriptions
+                            join a in _dbContext.Appointment on lr.AppointmentId equals a.AppointmentId
+                            join p in _dbContext.Doctor on a.DoctorId equals p.DoctorId
+                            join s in _dbContext.Staff on p.StaffId equals s.StaffId
+                            select new GetIDVM
+                            {
+                                AppointmentId = lr.AppointmentId,
+                                TestId = lr.LabTestId,
+                                StaffId = s.StaffId,
+
+                            };
+
+                return await query.FirstOrDefaultAsync();
             }
             return null;
         }
         #endregion
 
-        #region get all BillGeneration
-        public async Task<List<LabBillGeneration>> GetAllLabBillGeneration()
-        {
-            if (_dbContext != null)
-            {
-                return await _dbContext.LabBillGeneration.ToListAsync();
-            }
-            return null;
-        }
-        #endregion
     }
 }

@@ -1,4 +1,5 @@
-﻿using FinalCMS.Models;
+﻿using FinalCMS.LabViewModel;
+using FinalCMS.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -6,12 +7,8 @@ namespace FinalCMS.LabRepository
 {
     public interface ILabreportRepository
     {
-        Task<List<LabReportGeneration>> GetAllLabReportGeneration();
-
-        Task<int> AddLabReport(LabReportGeneration labReport);
-
-        Task<LabReportGeneration> GetLabReportById(int? id);
-
-        Task<List<LabBillGeneration>> GetAllLabBillGeneration();
+        Task<List<LabReportVM>> GetViewModelReport();
+        Task<int> AddReport(LabReportGeneration report);
+        Task<GetIDVM> GetIDViewModel();
     }
 }

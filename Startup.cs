@@ -34,10 +34,11 @@ namespace FinalCMS
             services.AddControllers();
 
             //connectionString for database , inject as dependency
-            services.AddDbContext<FinalCMS_dbContext>(db => db.UseSqlServer(Configuration.GetConnectionString("FinalCMS_db")));
+            services.AddDbContext<FinalCMS_dbContext>(db => db.UseSqlServer(Configuration.GetConnectionString("connectionstring")));
 
             //add dependency injection of EmployeeRepository
             services.AddScoped<ILabreportRepository, LabreportRepository>();
+            services.AddScoped<ILabTestList, LabTestList>();
 
             //json resolved
             services.AddControllers().AddNewtonsoftJson(Options =>

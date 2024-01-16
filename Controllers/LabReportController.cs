@@ -1,4 +1,5 @@
 ﻿using FinalCMS.LabRepository;
+using FinalCMS.LabViewModel;
 using FinalCMS.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -12,34 +13,52 @@ namespace FinalCMS.Controllers
     [ApiController]
     public class LabReportController : ControllerBase
     {
-        private readonly ILabreportRepository _labreportRepository;
+        //private readonly ILabreportRepository _labreportRepository;
+        private readonly ILabTestList _labTestRepository;
+        private readonly ILabreportRepository _labReportRepository;
 
-        public LabReportController(ILabreportRepository labreportRepository)
+        public LabReportController(ILabreportRepository labreportRepository, ILabTestList labTestRepository)
         {
-            _labreportRepository = labreportRepository;
+            _labReportRepository = labreportRepository;
+            _labTestRepository = labTestRepository;
         }
 
-        #region GEt all LabReport
+       /* private readonly ILabTestList _labTestRepository;
+        private readonly ILabreportRepository _labReportRepository;
+*/
+
+        // constructor injection
+
+        #region View Model
         [HttpGet]
-        
-        public async Task<ActionResult<IEnumerable<LabReportGeneration>>> GetLabReportAll()
+        public async Task<ActionResult<IEnumerable<LabTestVM>>> LabTestsVM()
         {
-            return await _labreportRepository.GetAllLabReportGeneration();
+            return await _labTestRepository.GetViewModelPrescriptions();
+        }
+
+        #endregion
+        #region Listing
+        [HttpGet]
+        [Route("List")]
+
+        public async Task<ActionResult<IEnumerable<LabReportVM>>> GetViewModelReport()
+        {
+            return await _labReportRepository.GetViewModelReport();
         }
         #endregion
-
-        #region Add LabReportGeneration
+        #region Add an employee
         [HttpPost]
-        public async Task<IActionResult> AddLabReport([FromBody] LabReportGeneration labReport)
+        public async Task<IActionResult> AddReport([FromBody] LabReportGeneration report)
         {
-            if (ModelState.IsValid)  // check the validate the code
+            //check the validation of code
+            if (ModelState.IsValid)
             {
                 try
                 {
-                    var LabReportId = await _labreportRepository.AddLabReport(labReport);
-                    if (LabReportId > 0)
+                    var ReportId = await _labReportRepository.AddReport(report);
+                    if (ReportId > 0)
                     {
-                        return Ok(LabReportId);
+                        return Ok(ReportId);
                     }
                     else
                     {
@@ -50,40 +69,19 @@ namespace FinalCMS.Controllers
                 {
                     return BadRequest();
                 }
-            }
-            return BadRequest();
-        }
 
+            }
+            return BadRequest(report);
+        }
         #endregion
 
-        #region GetLabReport By id
-        [HttpGet("{id}")]
-        public async Task<ActionResult<LabReportGeneration>> GetLabReportById(int? id)
+        [HttpGet]
+        [Route("Get")]
+
+        public async Task<ActionResult<GetIDVM>> GetIDViewModel()
         {
-            try
-            {
-                var labreport = await _labreportRepository.GetLabReportById(id);
-                if (labreport == null)
-                {
-                    return NotFound();
-                }
-                return Ok(labreport);
-            }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
+            return await _labReportRepository.GetIDViewModel();
         }
-        #endregion
 
-        #region get all LabBillGeneration
-        [HttpGet("GetBill")]
-        //[HttpGet]
-        //[Route("GetDepartment")]
-        public async Task<ActionResult<IEnumerable<LabBillGeneration>>> GetLabBillAll()
-        {
-            return await _labreportRepository.GetAllLabBillGeneration();
-        }
-        #endregion
     }
 }
