@@ -130,6 +130,31 @@ namespace FinalCMS.Controllers
         }
         #endregion
 
+        #region Enable PatientRecords
+        [HttpPatch("Enable/{patientId}")]
+        public async Task<IActionResult> Enable(int patientId)
+        {
+            try
+            {
+                var patient = await _patientRepository.EnableStatus(patientId);
+                if (patient == null)
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    return Ok(patient);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest($"Enable: {ex.Message}");
+            }
+
+        }
+        #endregion
+
     }
 
 }

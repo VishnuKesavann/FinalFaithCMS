@@ -12,5 +12,6 @@ namespace FinalCMS.Receptionist_Repository
         Task<Patient> GetPatientById(int? id);
         Task<Patient> DisableStatus(int? paitientId);
         Task<List<Patient>> GetAllDisabledPatients();
+        Task<Patient> EnableStatus(int? paitientId);
     }
 }

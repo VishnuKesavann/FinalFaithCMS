@@ -83,5 +83,17 @@ namespace FinalCMS.Receptionist_Repository
             return null;
         }
         #endregion
+        #region Enable Patient Status
+        public async Task<Patient> EnableStatus(int? paitientId)
+        {
+            var patient = await _context.Patient.FindAsync(paitientId);
+            if (patient != null)
+            {
+                patient.PatientStatus = "ACTIVE";
+                await _context.SaveChangesAsync();
+            }
+            return patient;
+        }
+        #endregion
     }
 }
