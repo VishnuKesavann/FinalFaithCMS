@@ -1,3 +1,4 @@
+using FinalCMS.LabRepository;
 using FinalCMS.Doctor_Repository;
 using FinalCMS.AdminRepository;
 using FinalCMS.Models;
@@ -53,6 +54,10 @@ namespace FinalCMS
             services.AddScoped<IStaffRepository, StaffRepository>();
             services.AddScoped<IUserLoginRepository, UserLoginRepository>();
 
+
+            //add dependency injection of EmployeeRepository
+            services.AddScoped<ILabreportRepository, LabreportRepository>();
+            services.AddScoped<ILabTestList, LabTestList>();
 
             //json resolved
             services.AddControllers().AddNewtonsoftJson(Options =>
