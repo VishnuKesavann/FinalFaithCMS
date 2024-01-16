@@ -2,6 +2,7 @@ using FinalCMS.LabRepository;
 using FinalCMS.Doctor_Repository;
 using FinalCMS.AdminRepository;
 using FinalCMS.Models;
+using FinalCMS.Repository;
 using FinalCMS.Receptionist_Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -59,6 +60,11 @@ namespace FinalCMS
             services.AddScoped<ILabreportRepository, LabreportRepository>();
             services.AddScoped<ILabTestList, LabTestList>();
 
+            // Add repositories
+            services.AddScoped<IPharmacistRepository, PharmacistRepository>();
+            services.AddScoped<IPharPatientPrescriptionRepository, PharPatientPrescriptionRepository>();
+
+
             //json resolved
             services.AddControllers().AddNewtonsoftJson(Options =>
             {
@@ -91,6 +97,10 @@ namespace FinalCMS
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // Enable CORS
+            app.UseCors(options =>
+            options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
 
 
             app.UseCors(Options =>
