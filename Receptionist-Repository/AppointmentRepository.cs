@@ -236,10 +236,12 @@ namespace FinalCMS.Receptionist_Repository
         {
             if (_context != null)
             {
+                // Get current date
+                DateTime currentDate = DateTime.Now.Date;
                 var appointments = await _context.Appointment
              .Include(a => a.Patient)
              .Include(a => a.Doctor).ThenInclude
-             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department).Where(a=>a.CheckUpStatus=="CONFIRMED")
+             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department).Where(a=>a.CheckUpStatus=="CONFIRMED" && a.AppointmentDate>=currentDate)
              .ToListAsync();
                 // Enable logging to console
                 var loggerFactory = LoggerFactory.Create(builder =>
