@@ -241,7 +241,7 @@ namespace FinalCMS.Receptionist_Repository
                 var appointments = await _context.Appointment
              .Include(a => a.Patient)
              .Include(a => a.Doctor).ThenInclude
-             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department).Where(a=>a.CheckUpStatus=="CONFIRMED" && a.AppointmentDate>=currentDate)
+             (d=>d.Staff).Include(a=>a.Doctor).ThenInclude(d=>d.Specialization).ThenInclude(s=>s.Department).Where(a=>a.CheckUpStatus=="CONFIRMED" && a.AppointmentDate>=currentDate && a.Patient.PatientStatus=="ACTIVE")
              .ToListAsync();
                 // Enable logging to console
                 var loggerFactory = LoggerFactory.Create(builder =>
