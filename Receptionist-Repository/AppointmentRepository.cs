@@ -123,12 +123,11 @@ namespace FinalCMS.Receptionist_Repository
                 {
                     registerFee = viewModel.RegisterFees ?? 0;
                 }
-
-                decimal consultFees = viewModel.ConsultationFee ?? _context.Doctor.Where(d => d.DoctorId == viewModel.DoctorId).Select(d => (decimal?)d.ConsultationFee).FirstOrDefault() ?? 0;
+                int doctorId=viewModel.DoctorId;
+                decimal consultFees = (decimal)viewModel.ConsultationFee;
                 decimal totalAmount = registerFee + consultFees + (0.18m * registerFee) + (0.18m * consultFees);
 
                 viewModel.RegisterFees = registerFee;
-                viewModel.ConsultationFee =(int ?) consultFees;
                 viewModel.TotalAmt = totalAmount;
                 var newConsultBill = new ConsultBill()
                 {
