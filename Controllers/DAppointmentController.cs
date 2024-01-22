@@ -95,6 +95,7 @@ namespace FinalCMS.Controllers
                         return Ok(diagId);
                     }
                     else
+    
                     {
                         return NotFound();
                     }

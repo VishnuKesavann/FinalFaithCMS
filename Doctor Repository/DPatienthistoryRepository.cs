@@ -35,6 +35,7 @@ namespace FinalCMS.Doctor_Repository
              .Select(a => new Patienthis
              {
                  AppointmentDate = a.AppointmentDate,
+                 AppointmentId = a.AppointmentId,
                  Symptoms = a.Diagnosis.FirstOrDefault().Symptoms,
                  Diagnosis1 = a.Diagnosis.FirstOrDefault().Diagnosis1,
                  Note = a.Diagnosis.FirstOrDefault().Note,
