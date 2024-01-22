@@ -31,7 +31,7 @@ namespace FinalCMS.Controllers
             _logger = logger;
         }
 
-        [HttpGet("GetAppointmentView")]
+        [HttpGet("GetAppointmentView/{docId}")]
         public async Task<ActionResult<IEnumerable<Todayapp>>> GetAppointmentView(int docId)
         {
             var appointments = await _appointmentRepository.GetAppointmentViewAsync(docId);
@@ -44,7 +44,7 @@ namespace FinalCMS.Controllers
             return Ok(appointments);
         }
 
-       [HttpGet("GetPatientView")]
+       [HttpGet("GetPatientView/{appointmentId}")]
         public async Task<ActionResult<Patientview>> GetPatientView(int appointmentId)
         {
             var patientDetails = await _patientDetailsRepository.GetPatientViewAsync(appointmentId);
@@ -54,7 +54,7 @@ namespace FinalCMS.Controllers
                 return NotFound(); // Or return an appropriate status code
             }
 
-            return Ok(patientDetails);
+            return Ok(patientDetails);                          
         }
 
 

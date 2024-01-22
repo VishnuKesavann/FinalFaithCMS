@@ -32,6 +32,8 @@ namespace FinalCMS.Doctor_Repository
                             select new Todayapp
                             {
                                 TokenNo = appointment.TokenNo,
+                                PatientId = patient.PatientId,
+                                DoctorId = appointment.DoctorId,
                                 PatientName = patient.PatientName,
                                 Gender = patient.Gender,
                                 PatientAge = (int)Math.Floor((todayDate - patient.PatientDob).TotalDays / 365),

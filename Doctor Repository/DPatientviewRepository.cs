@@ -26,6 +26,7 @@ namespace FinalCMS.Doctor_Repository
                             select new Patientview
                             {
                                 AppointmentId = appointment.AppointmentId,
+                                PatientId = patient.PatientId,
                                 PatientName = patient.PatientName,
                                 Gender = patient.Gender,
                                 BloodGroup = patient.BloodGroup,
