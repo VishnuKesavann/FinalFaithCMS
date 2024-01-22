@@ -116,7 +116,8 @@ namespace FinalCMS.Receptionist_Repository
                 decimal registerFee;
                 if (isNewPatient)
                 {
-                    registerFee = viewModel.RegisterFees ?? 150;
+                    viewModel.RegisterFees = 150;
+                    registerFee =(decimal) viewModel.RegisterFees;
 
                 }
                 else
