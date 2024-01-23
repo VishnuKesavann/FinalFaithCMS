@@ -13,6 +13,7 @@ namespace FinalCMS.Controllers
     public class RPatientController : ControllerBase
     {
         private readonly IPatientRepository _patientRepository;
+
         public RPatientController(IPatientRepository patientRepository)
         {
             _patientRepository = patientRepository; 
