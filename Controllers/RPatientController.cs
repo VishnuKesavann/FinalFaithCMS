@@ -155,7 +155,60 @@ namespace FinalCMS.Controllers
 
         }
         #endregion
+        #region Search patient records
+        [HttpGet]
+        [Route("searchPatients")]
+        public async Task<IActionResult> SearchPatients(string registerNumber=null,long phoneNumber = 0)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(registerNumber) && phoneNumber==0) 
+                {
+                    return BadRequest("Please provide either Register Number or Phone Number");
+                }
+                var patients = await _patientRepository.searchFilterPatients(registerNumber, phoneNumber);
+                if (patients == null || patients.Count == 0)
+                {
+                    return NotFound("No patients found");
+                }
+                return Ok(patients);
 
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server error");
+                
+            }
+            
+        }
+        #endregion
+        #region Search Disabled patient records
+        [HttpGet]
+        [Route("DisabledsearchPatients")]
+        public async Task<IActionResult> DisabledSearchPatients(string registerNumber = null, long phoneNumber = 0)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(registerNumber) && phoneNumber == 0)
+                {
+                    return BadRequest("Please provide either Register Number or Phone Number");
+                }
+                var patients = await _patientRepository.searchFilterDisabledPatients(registerNumber, phoneNumber);
+                if (patients == null || patients.Count == 0)
+                {
+                    return NotFound("No patients found");
+                }
+                return Ok(patients);
+
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Internal Server error");
+
+            }
+
+        }
+        #endregion
     }
 
 }

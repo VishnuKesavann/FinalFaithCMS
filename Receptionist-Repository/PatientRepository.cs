@@ -95,5 +95,35 @@ namespace FinalCMS.Receptionist_Repository
             return patient;
         }
         #endregion
+        #region serach of Active patient Records
+        public async Task<List<Patient>> searchFilterPatients(string RegisterNumber=null,long phoneNumber = 0)
+        {
+            IQueryable<Patient> query = _context.Patient;
+            if (!string.IsNullOrEmpty(RegisterNumber))
+            {
+                query=query.Where(p=>p.RegisterNo == RegisterNumber && p.PatientStatus=="ACTIVE");
+            }
+            else if(phoneNumber > 0)
+            {
+                query=query.Where(p=>p.PhoneNumber == phoneNumber && p.PatientStatus=="ACTIVE");
+            }
+            return await query.ToListAsync();
+        }
+        #endregion
+        #region search of Disabled Patient Records
+        public async Task<List<Patient>> searchFilterDisabledPatients(string RegisterNumber=null,long phoneNumber = 0)
+        {
+            IQueryable<Patient> query= _context.Patient;
+            if (!string.IsNullOrEmpty(RegisterNumber))
+            {
+                query = query.Where(p => p.RegisterNo == RegisterNumber && p.PatientStatus == "DISABLED");
+            }
+            else if (phoneNumber > 0)
+            {
+                query = query.Where(p => p.PhoneNumber == phoneNumber && p.PatientStatus == "DISABLED");
+            }
+            return await query.ToListAsync();
+        }
+        #endregion
     }
 }
