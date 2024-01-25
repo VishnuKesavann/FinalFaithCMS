@@ -4,6 +4,7 @@
 	  <OutputType>Exe</OutputType>
 	  <TargetFramework>netcoreapp3.1</TargetFramework>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<DocumentationFile>bin\Debug\netcoreapp3.1\FinalCMS.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
