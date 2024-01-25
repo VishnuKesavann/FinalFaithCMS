@@ -35,6 +35,7 @@ namespace FinalCMS.Doctor_Repository
                                 PatientId = patient.PatientId,
                                 DoctorId = appointment.DoctorId,
                                 PatientName = patient.PatientName,
+                                AppointmentDate = DateTime.Now.Date,
                                 Gender = patient.Gender,
                                 PatientAge = (int)Math.Floor((todayDate - patient.PatientDob).TotalDays / 365),
                                 CheckUpStatus = appointment.CheckUpStatus,

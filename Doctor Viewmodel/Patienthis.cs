@@ -6,6 +6,7 @@ namespace FinalCMS.Doctor_Viewmodel
     {
 
         public DateTime AppointmentDate { get; set; }
+        public int AppointmentId { get; set; }
         public string Symptoms { get; set; }
         public string Diagnosis1 { get; set; }
         public string Note { get; set; }

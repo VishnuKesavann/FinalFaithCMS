@@ -13,5 +13,7 @@ namespace FinalCMS.Receptionist_Repository
         Task<Patient> DisableStatus(int? paitientId);
         Task<List<Patient>> GetAllDisabledPatients();
         Task<Patient> EnableStatus(int? paitientId);
+        Task<List<Patient>> searchFilterPatients(string RegisterNumber = null, long phoneNumber = 0);
+        Task<List<Patient>> searchFilterDisabledPatients(string RegisterNumber = null, long phoneNumber = 0);
     }
 }
