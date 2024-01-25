@@ -19,5 +19,13 @@ namespace FinalCMS.LabViewModel
         public string TestResult { get; set; }
 
         public string Remarks { get; set; }
+        public int? LabPrescId { get; set; }
+        public int? AppointmentId { get; set; }
+        public int? TestId { get; set; }
+        public int? StaffId { get; set; }
+        public int LabreportId { get; set; }
+        public string LabResult { get; set; }
+       
+
     }
 }

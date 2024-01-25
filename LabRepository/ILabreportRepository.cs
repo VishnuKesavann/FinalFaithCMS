@@ -8,7 +8,8 @@ namespace FinalCMS.LabRepository
     public interface ILabreportRepository
     {
         Task<List<LabReportVM>> GetViewModelReport();
-        Task<int> AddReport(LabReportGeneration report);
-        Task<GetIDVM> GetIDViewModel();
+        Task<int> AddReport(LabReportVM viewmodal);
+
+        Task<GetIDVM> GetIDViewModel(int labpresId);
     }
 }

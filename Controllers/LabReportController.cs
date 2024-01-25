@@ -48,7 +48,7 @@ namespace FinalCMS.Controllers
         #endregion
         #region Add an employee
         [HttpPost]
-        public async Task<IActionResult> AddReport([FromBody] LabReportGeneration report)
+        public async Task<IActionResult> AddReport([FromBody] LabReportVM report)
         {
             //check the validation of code
             if (ModelState.IsValid)
@@ -78,10 +78,12 @@ namespace FinalCMS.Controllers
         [HttpGet]
         [Route("Get")]
 
-        public async Task<ActionResult<GetIDVM>> GetIDViewModel()
+        public async Task<ActionResult<GetIDVM>> GetIDViewModel(int labpresId)
         {
-            return await _labReportRepository.GetIDViewModel();
+            var idvm= await _labReportRepository.GetIDViewModel(labpresId);
+            return Ok(idvm);
         }
 
+        
     }
 }

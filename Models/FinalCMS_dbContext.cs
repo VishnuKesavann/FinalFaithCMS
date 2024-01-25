@@ -6,6 +6,8 @@ namespace FinalCMS.Models
 {
     public partial class FinalCMS_dbContext : DbContext
     {
+        internal object lapresId;
+
         public FinalCMS_dbContext()
         {
         }
@@ -606,7 +608,7 @@ namespace FinalCMS.Models
             });
 
             OnModelCreatingPartial(modelBuilder);
-        }
+        }  
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }

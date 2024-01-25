@@ -30,7 +30,7 @@ namespace FinalCMS.LabRepository
                                    join s in _dbContext.Staff on d.StaffId equals s.StaffId
                                    join l in _dbContext.Laboratory on lp.LabTestId equals l.TestId
                                    select new LabTestVM
-                                   {
+                                   {   LabPrescId=lp.LabPrescriptionId,
                                        AppointmentId = a.AppointmentId,
                                        PatientName = p.PatientName,
                                        TestName = l.TestName,

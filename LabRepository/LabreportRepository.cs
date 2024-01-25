@@ -42,10 +42,21 @@ namespace FinalCMS.LabRepository
             return null;
         }
         #region 
-        public async Task<int> AddReport(LabReportGeneration report)
+        public async Task<int> AddReport(LabReportVM viewmodal)
         {
             if (_dbContext != null)
             {
+                LabReportGeneration report = new LabReportGeneration()
+                {
+                    AppointmentId = viewmodal.AppointmentId,
+                    LabResult = viewmodal.LabResult,
+                    ReportDate = viewmodal.ReportDate,
+                    Remarks = viewmodal.Remarks,
+                    LabPrescId = viewmodal.LabPrescId,
+                    TestId = viewmodal.TestId,
+                    StaffId = viewmodal.StaffId
+                };
+
                 await _dbContext.LabReportGeneration.AddAsync(report);
                 await _dbContext.SaveChangesAsync();
                 return report.LabreportId;
@@ -55,7 +66,7 @@ namespace FinalCMS.LabRepository
         #endregion
 
         #region GET
-        public async Task<GetIDVM> GetIDViewModel()
+        public async Task<GetIDVM> GetIDViewModel(int labpresId)
         {
             if (_dbContext != null)
             {
@@ -63,8 +74,10 @@ namespace FinalCMS.LabRepository
                             join a in _dbContext.Appointment on lr.AppointmentId equals a.AppointmentId
                             join p in _dbContext.Doctor on a.DoctorId equals p.DoctorId
                             join s in _dbContext.Staff on p.StaffId equals s.StaffId
+                            where lr.LabPrescriptionId == labpresId
                             select new GetIDVM
                             {
+                                LabPrescId=lr.LabPrescriptionId,
                                 AppointmentId = lr.AppointmentId,
                                 TestId = lr.LabTestId,
                                 StaffId = s.StaffId,
