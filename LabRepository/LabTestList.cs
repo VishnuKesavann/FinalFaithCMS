@@ -20,8 +20,8 @@ namespace FinalCMS.LabRepository
         {
             if (_dbContext != null)
             {
-                // LINQ
-                // Assuming you have a DataContext named "dbContext"
+                 
+                //LINQ Assuming you have a DataContext named "dbContext"
 
                 var detailsQuery = from lp in _dbContext.LabPrescriptions
                                    join a in _dbContext.Appointment on lp.AppointmentId equals a.AppointmentId
