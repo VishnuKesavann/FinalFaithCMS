@@ -90,5 +90,37 @@ namespace FinalCMS.LabRepository
         }
         #endregion
 
+        #region Bill Generation
+        public async Task<LabBillVM>GetBillVM(int LabbillId)
+        {
+            if (_dbContext != null)
+            {
+                var query = from lb in _dbContext.LabBillGeneration
+                            join a in _dbContext.Appointment on lb.AppointmentId equals a.AppointmentId
+                            join p in _dbContext.Patient on a.PatientId equals p.PatientId
+                            join t in _dbContext.Laboratory on lb.TestId equals t.TestId
+                            join l in _dbContext.LabReportGeneration on lb.LabreportId equals l.LabreportId
+                            where lb.LabbillId == LabbillId
+                            select new LabBillVM
+                            {
+                                LabbillId = lb.LabbillId,
+                                AppointmentId = lb.AppointmentId,
+                                TestId = lb.TestId,
+                                Amount = lb.Amount,
+                                TotalAmount = lb.Amount + lb.Amount * 0.18m,
+                        
+                                PatientId = lb.PatientId,
+                                PatientName=p.PatientName,
+                                LabreportId = lb.LabreportId,
+                            };
+                
+                return await query.FirstOrDefaultAsync();
+            }
+            return null;
+        }
+
+
+        #endregion
+
     }
 }
