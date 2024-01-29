@@ -207,5 +207,71 @@ namespace FinalCMS.Controllers
             }
         }
         #endregion
+        #region Search by Appointment Date
+        [HttpGet]
+        [Route("SearchByAppointmentDate/{date}")]
+        public async Task<IActionResult> SearchByAppointmentDate(DateTime date) 
+        {
+            try
+            {
+                var appointments = await _appointmentRepository.SearchAppointmentByAppointmentDate(date);
+                if (appointments!=null)
+                {
+                    return Ok(appointments);
+                }
+                else
+                {
+                    return NotFound();
+                }    
+                    
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+                
+            }
+        }
+        #endregion
+        #region Search by Appointment Date
+        [HttpGet]
+        [Route("SearchByAppointmentDateAndRegisterNumber")]
+        public async Task<IActionResult> SearchByAppointmentDateAndRegisterNumber([FromQuery]DateTime date,[FromQuery]string RegisterNumber)
+        {
+            try
+            {
+                var appointments = await _appointmentRepository.SearchAppointmentByAppointmentDateAndRegisterNumber(date,RegisterNumber);
+                if (appointments != null)
+                {
+                    return Ok(appointments);
+                }
+                else
+                {
+                    return NotFound();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+
+            }
+        }
+        #endregion
+        #region Update the appointments to latest
+        [HttpPost("cancel-appointments")]
+        public async Task<IActionResult> CancelAppointmentForUnChecked() 
+        {
+            try
+            {
+                await _appointmentRepository.CancelAppointmentBydefault();
+                return Ok(new { message = "Appointments Cancelled Successfully" });
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { ex.Message });
+            }
+        }
+        #endregion
     }
 }
