@@ -85,11 +85,11 @@ namespace FinalCMS.Controllers
         }
 
         [HttpGet]
-        [Route("Bill/{{LabbillId}}")]
+        [Route("Bill/{LabreportId}")]
 
-        public async Task<ActionResult<LabBillVM>>GetLabBillVm(int LabbillId)
+        public async Task<ActionResult<LabBillVM>>GetLabBillVm(int LabreportId)
         {
-            var idvm =await _labReportRepository.GetBillVM(LabbillId);
+            var idvm =await _labReportRepository.GetBillVM(LabreportId);
             return Ok(idvm);
         }
 

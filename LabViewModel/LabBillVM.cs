@@ -10,6 +10,7 @@ namespace FinalCMS.LabViewModel
         public decimal? Amount { get; set; }
         public int? PatientId { get; set; }
         public int? TestId { get; set; }
+        public string? TestName { get; set; }
         public int? LabreportId { get; set; }
         public int? AppointmentId { get; set; }
         public string? PatientName { get; set; }
