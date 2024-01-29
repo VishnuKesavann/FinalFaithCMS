@@ -28,6 +28,7 @@ namespace FinalCMS.LabRepository
                             join p in _dbContext.Patient on a.PatientId equals p.PatientId
 
                             select new LabReportVM
+
                             {
                                 ReportDate = lr.ReportDate,
                                 ReportId = lr.LabreportId,
@@ -38,6 +39,7 @@ namespace FinalCMS.LabRepository
                                 TestResult = lr.LabResult,
                                 Remarks = lr.Remarks
                             };
+                query = query.OrderByDescending(lr => lr.ReportDate);
 
                 return await query.ToListAsync();
             }
@@ -80,6 +82,7 @@ namespace FinalCMS.LabRepository
                             join p in _dbContext.Doctor on a.DoctorId equals p.DoctorId
                             join s in _dbContext.Staff on p.StaffId equals s.StaffId
                             where lr.LabPrescriptionId == labpresId
+
                             select new GetIDVM
                             {
                                 LabPrescId=lr.LabPrescriptionId,
