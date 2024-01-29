@@ -1,5 +1,6 @@
 ﻿using FinalCMS.Models;
 using FinalCMS.Receptionist_ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,5 +16,8 @@ namespace FinalCMS.Receptionist_Repository
         Task<List<BillViewModel>> GetAllAppointmentsWithBillViewModel();
         Task<BillViewModel> GetAppointmentDetailsById(int? appointmentId);
         Task<Appointment> CancelAppointment(int? appointmentId);
+        Task<List<BillViewModel>> SearchAppointmentByAppointmentDate(DateTime appointmentDate);
+        Task<List<BillViewModel>> SearchAppointmentByAppointmentDateAndRegisterNumber(DateTime appointmentDate, string RegisterNumber);
+        Task CancelAppointmentBydefault();
     }
 }

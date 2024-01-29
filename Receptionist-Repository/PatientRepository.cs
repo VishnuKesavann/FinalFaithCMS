@@ -101,11 +101,12 @@ namespace FinalCMS.Receptionist_Repository
             IQueryable<Patient> query = _context.Patient;
             if (!string.IsNullOrEmpty(RegisterNumber))
             {
-                query=query.Where(p=>p.RegisterNo == RegisterNumber && p.PatientStatus=="ACTIVE");
+                query=query.Where(p=>EF.Functions.Like(p.RegisterNo,$"%{RegisterNumber}%") && p.PatientStatus=="ACTIVE");
             }
             else if(phoneNumber > 0)
             {
-                query=query.Where(p=>p.PhoneNumber == phoneNumber && p.PatientStatus=="ACTIVE");
+                string phoneNumberString = phoneNumber.ToString();
+                query =query.Where(p=>EF.Functions.Like(p.PhoneNumber.ToString(),$"%{phoneNumberString}%")&& p.PatientStatus=="ACTIVE");
             }
             return await query.ToListAsync();
         }
