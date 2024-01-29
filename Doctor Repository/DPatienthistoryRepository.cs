@@ -32,6 +32,7 @@ namespace FinalCMS.Doctor_Repository
              .Include(a => a.LabReportGeneration)
                  .ThenInclude(rg => rg.Test)
              .Where(a => a.PatientId == patientId)
+             .OrderByDescending(a => a.AppointmentDate)
              .Select(a => new Patienthis
              {
                  AppointmentDate = a.AppointmentDate,
