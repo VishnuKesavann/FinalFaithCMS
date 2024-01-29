@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging.Console;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Threading.Tasks;
 
 namespace FinalCMS.Receptionist_Repository
@@ -346,13 +347,155 @@ namespace FinalCMS.Receptionist_Repository
                 var appointment = await _context.Appointment.FindAsync(appointmentId);
                 if (appointment != null) 
                 {
-                    appointment.CheckUpStatus = "CANCELLED";
+                    appointment.CheckUpStatus = "CANCELLED ";
                     await _context.SaveChangesAsync();
                     
                 }
                 return appointment;
             }
             return null;
+        }
+        #endregion
+
+        #region Get appointments by appointment Date
+        public async Task<List<BillViewModel>> SearchAppointmentByAppointmentDate(DateTime appointmentDate) 
+        {
+            if (_context != null)
+            {
+                
+                var appointments = await _context.Appointment
+             .Include(a => a.Patient)
+             .Include(a => a.Doctor).ThenInclude
+             (d => d.Staff).Include(a => a.Doctor).ThenInclude(d => d.Specialization).ThenInclude(s => s.Department).Where(a => a.CheckUpStatus == "CONFIRMED" && a.AppointmentDate == appointmentDate && a.Patient.PatientStatus == "ACTIVE")
+             .ToListAsync();
+               
+
+                // Your actual query to retrieve Staff with Department
+                var staffWithDepartment = await _context.Staff
+                    .Include(s => s.Department)
+                    .FirstOrDefaultAsync(s => s.DepartmentId == s.Department.DepartmentId);
+
+               
+                var appointmentsWithViewModel = new List<BillViewModel>();
+
+                foreach (var appointment in appointments)
+                {
+                    // Find the ConsultBill for the current appointment
+                    var consultBill = await _context.ConsultBill
+                        .FirstOrDefaultAsync(b => b.AppointmentId == appointment.AppointmentId);
+
+                    // Transform Appointment entity and ConsultBill to BillViewModel
+                    var appointmentWithViewModel = new BillViewModel
+                    {
+                        AppointmentId = appointment.AppointmentId,
+                        TokenNo = appointment.TokenNo,
+                        AppointmentDate = appointment.AppointmentDate,
+                        PatientId = appointment.PatientId,
+                        DoctorId = appointment.DoctorId,
+                        CheckUpStatus = appointment.CheckUpStatus,
+                        BillId = consultBill.BillId,
+                        RegisterFees = consultBill?.RegisterFees,
+                        TotalAmt = consultBill.TotalAmt,
+                        ConsultationFee = appointment.Doctor?.ConsultationFee,
+                        StaffId = appointment.Doctor?.StaffId,
+                        SpecializationId = appointment.Doctor?.SpecializationId,
+                        DepartmentId = appointment.Doctor?.Specialization?.DepartmentId,
+                        Department1 = appointment.Doctor?.Specialization?.Department?.Department1,
+                        StaffName = appointment.Doctor?.Staff?.StaffName,
+                        RegisterNo = appointment.Patient?.RegisterNo,
+                        PatientName = appointment.Patient?.PatientName
+                    };
+
+                    appointmentsWithViewModel.Add(appointmentWithViewModel);
+                }
+
+
+                return appointmentsWithViewModel;
+            }
+            return null;
+        }
+        #endregion
+        
+        #region Get appointments by appointment Date
+        public async Task<List<BillViewModel>> SearchAppointmentByAppointmentDateAndRegisterNumber (DateTime appointmentDate,string RegisterNumber) 
+        {
+            if (_context != null)
+            {
+                var appointments = await _context.Appointment
+                    .Include(a => a.Patient)
+                    .Include(a => a.Doctor).ThenInclude(d => d.Staff)
+                    .Include(a => a.Doctor).ThenInclude(d => d.Specialization).ThenInclude(s => s.Department)
+                    .Where(a =>
+                        a.CheckUpStatus == "CONFIRMED" &&
+                        a.AppointmentDate == appointmentDate &&
+                        a.Patient.PatientStatus == "ACTIVE" &&
+                        EF.Functions.Like(a.Patient.RegisterNo, $"%{RegisterNumber}%")
+                    )
+                    .ToListAsync();
+                ;
+
+
+                // Your actual query to retrieve Staff with Department
+                var staffWithDepartment = await _context.Staff
+                    .Include(s => s.Department)
+                    .FirstOrDefaultAsync(s => s.DepartmentId == s.Department.DepartmentId);
+
+               
+                var appointmentsWithViewModel = new List<BillViewModel>();
+
+                foreach (var appointment in appointments)
+                {
+                    // Find the ConsultBill for the current appointment
+                    var consultBill = await _context.ConsultBill
+                        .FirstOrDefaultAsync(b => b.AppointmentId == appointment.AppointmentId);
+
+                    // Transform Appointment entity and ConsultBill to BillViewModel
+                    var appointmentWithViewModel = new BillViewModel
+                    {
+                        AppointmentId = appointment.AppointmentId,
+                        TokenNo = appointment.TokenNo,
+                        AppointmentDate = appointment.AppointmentDate,
+                        PatientId = appointment.PatientId,
+                        DoctorId = appointment.DoctorId,
+                        CheckUpStatus = appointment.CheckUpStatus,
+                        BillId = consultBill.BillId,
+                        RegisterFees = consultBill?.RegisterFees,
+                        TotalAmt = consultBill.TotalAmt,
+                        ConsultationFee = appointment.Doctor?.ConsultationFee,
+                        StaffId = appointment.Doctor?.StaffId,
+                        SpecializationId = appointment.Doctor?.SpecializationId,
+                        DepartmentId = appointment.Doctor?.Specialization?.DepartmentId,
+                        Department1 = appointment.Doctor?.Specialization?.Department?.Department1,
+                        StaffName = appointment.Doctor?.Staff?.StaffName,
+                        RegisterNo = appointment.Patient?.RegisterNo,
+                        PatientName = appointment.Patient?.PatientName
+                    };
+
+                    appointmentsWithViewModel.Add(appointmentWithViewModel);
+                }
+
+
+                return appointmentsWithViewModel;
+            }
+            return null;
+        }
+        #endregion
+        #region Cancel the Appointments for not attendend 
+        public async Task CancelAppointmentBydefault() 
+        {
+            if (_context!=null)
+            {   DateTime currentDate=DateTime.Now;
+                var appointmentsToCancel = await _context.Appointment.Where(a => a.AppointmentDate < currentDate && a.CheckUpStatus == "CONFIRMED").ToListAsync();
+                if (appointmentsToCancel != null) 
+                {
+                    foreach (var appointment in appointmentsToCancel)
+                    {
+                        appointment.CheckUpStatus = "CANCELLED";
+                    }
+                    await _context.SaveChangesAsync();
+                }
+                
+            }
         }
         #endregion
 

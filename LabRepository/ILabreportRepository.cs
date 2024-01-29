@@ -11,5 +11,6 @@ namespace FinalCMS.LabRepository
         Task<int> AddReport(LabReportVM viewmodal);
 
         Task<GetIDVM> GetIDViewModel(int labpresId);
+        Task<LabBillVM> GetBillVM(int LabreportId);
     }
 }

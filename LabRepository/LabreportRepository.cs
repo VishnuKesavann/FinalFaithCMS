@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System;
+
 namespace FinalCMS.LabRepository
 {
     public class LabreportRepository : ILabreportRepository
@@ -26,6 +28,7 @@ namespace FinalCMS.LabRepository
                             join p in _dbContext.Patient on a.PatientId equals p.PatientId
 
                             select new LabReportVM
+
                             {
                                 ReportDate = lr.ReportDate,
                                 ReportId = lr.LabreportId,
@@ -36,6 +39,7 @@ namespace FinalCMS.LabRepository
                                 TestResult = lr.LabResult,
                                 Remarks = lr.Remarks
                             };
+                query = query.OrderByDescending(lr => lr.ReportDate);
 
                 return await query.ToListAsync();
             }
@@ -59,6 +63,9 @@ namespace FinalCMS.LabRepository
 
                 await _dbContext.LabReportGeneration.AddAsync(report);
                 await _dbContext.SaveChangesAsync();
+                LabPrescriptions prescriptions = _dbContext.LabPrescriptions.FirstOrDefault(lb => lb.LabPrescriptionId == viewmodal.LabPrescId);
+                prescriptions.LabTestStatus = "COMPLETED";
+                _dbContext.SaveChangesAsync();
                 return report.LabreportId;
             }
             return 0;
@@ -75,6 +82,7 @@ namespace FinalCMS.LabRepository
                             join p in _dbContext.Doctor on a.DoctorId equals p.DoctorId
                             join s in _dbContext.Staff on p.StaffId equals s.StaffId
                             where lr.LabPrescriptionId == labpresId
+
                             select new GetIDVM
                             {
                                 LabPrescId=lr.LabPrescriptionId,
@@ -89,6 +97,71 @@ namespace FinalCMS.LabRepository
             return null;
         }
         #endregion
+
+        #region Bill Generation
+        public async Task<LabBillVM>GetBillVM(int LabreportId)
+        {
+            if (_dbContext != null)
+            {
+                var query = from l in _dbContext.LabReportGeneration
+                            join a in _dbContext.Appointment on l.AppointmentId equals a.AppointmentId
+                            join p in _dbContext.Patient on a.PatientId equals p.PatientId
+                            join t in _dbContext.Laboratory on l.TestId equals t.TestId
+                            where l.LabreportId == LabreportId
+                            select new LabBillVM
+                            {
+                                
+                                C=l.ReportDate,
+                                AppointmentId = a.AppointmentId,
+                                TestId = t.TestId,
+                                TestName = t.TestName,
+                                Amount = t.TestPrice,
+                                TotalAmount = t.TestPrice + t.TestPrice * 0.18m,                       
+                                PatientId = p.PatientId,
+                                PatientName=p.PatientName,
+                                LabreportId = l.LabreportId,
+                            };
+                LabBillVM result = await query.FirstOrDefaultAsync();
+
+                if (result != null)
+                {
+                    var Bill =await AddLabBillGeneration(result);
+                    result.LabbillId=Bill.LabbillId;
+                }
+
+
+                return await query.FirstOrDefaultAsync();
+            }
+            return null;
+
+        }
+        #endregion
+        public async Task< LabBillGeneration> AddLabBillGeneration(LabBillVM labBillVM)
+        {
+            LabBillGeneration existingLabBill = _dbContext.LabBillGeneration.FirstOrDefault(lb => lb.LabreportId == labBillVM.LabreportId);
+
+            if (existingLabBill != null)
+            {
+                // Report ID already exists, return the existing record
+                return existingLabBill;
+            }
+            LabBillGeneration newLabBill = new LabBillGeneration
+            {
+                LabbillId = labBillVM.LabbillId,
+                C = DateTime.Now, // Assuming you want to set the current date and time
+                TotalAmount = labBillVM.TotalAmount,
+                Amount = labBillVM.Amount,
+                PatientId = labBillVM.PatientId,
+                TestId = labBillVM.TestId,
+                LabreportId = labBillVM.LabreportId,
+                AppointmentId = labBillVM.AppointmentId
+            };
+
+            _dbContext.LabBillGeneration.Add(newLabBill);
+            await _dbContext.SaveChangesAsync();
+
+            return newLabBill;
+        }
 
     }
 }

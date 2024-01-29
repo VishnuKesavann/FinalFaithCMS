@@ -29,6 +29,7 @@ namespace FinalCMS.LabRepository
                                    join d in _dbContext.Doctor on a.DoctorId equals d.DoctorId
                                    join s in _dbContext.Staff on d.StaffId equals s.StaffId
                                    join l in _dbContext.Laboratory on lp.LabTestId equals l.TestId
+                                   where lp.LabTestStatus=="PENDING"
                                    select new LabTestVM
                                    {   LabPrescId=lp.LabPrescriptionId,
                                        AppointmentId = a.AppointmentId,

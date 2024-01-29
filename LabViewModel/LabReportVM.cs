@@ -25,7 +25,8 @@ namespace FinalCMS.LabViewModel
         public int? StaffId { get; set; }
         public int LabreportId { get; set; }
         public string LabResult { get; set; }
-       
+        
+
 
     }
 }
